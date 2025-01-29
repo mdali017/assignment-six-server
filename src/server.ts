@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import { Server } from "http";
 import config from "./app/config";
 import app from "./app";
 

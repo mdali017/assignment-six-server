@@ -8,8 +8,7 @@ import auth from '../../middleware/auth';
 
 const router = express.Router();
 
-// Apply auth middleware to all routes
-// router.use(auth);
+
 
 // Create post with multiple images
 router.post(

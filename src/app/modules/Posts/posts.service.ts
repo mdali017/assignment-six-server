@@ -11,10 +11,10 @@ const handleImagesUpload = async (files: Express.Multer.File[]) => {
 };
 
 const createPostIntoDB = async (payload: TPost, files?: Express.Multer.File[]) => {
-  const user = await UserModel.findById(payload.author);
-  if (!user) {
-    throw new Error("Author not found");
-  }
+  // const user = await UserModel.findById(payload.author);
+  // if (!user) {
+  //   throw new Error("Author not found");
+  // }
 
   // Upload images if provided
   if (files && files.length > 0) {
@@ -34,17 +34,17 @@ const createPostIntoDB = async (payload: TPost, files?: Express.Multer.File[]) =
   return newPost;
 };
 
-const getAllPostsFromDB = async (userId: string) => {
-  const user = await UserModel.findById(userId);
-  if (!user) {
-    throw new Error("User not found");
-  }
+const getAllPostsFromDB = async () => {
+  // const user = await UserModel.findById(userId);
+  // if (!user) {
+  //   throw new Error("User not found");
+  // }
 
   // If user is verified, return all posts
   // If not, return only non-premium posts
-  const query = user.isVerified ? {} : { isPremium: false };
+  // const query = user.isVerified ? {} : { isPremium: false };
 
-  const posts = await PostModel.find(query)
+  const posts = await PostModel.find()
     .populate("author", "name profilePicture isVerified")
     .sort({ createdAt: -1 });
 

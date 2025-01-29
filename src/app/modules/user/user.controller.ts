@@ -33,7 +33,8 @@ const getAllUsers = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getUserProfile = catchAsync(async (req: Request, res: Response) => {
-  const userId = req.params.userId;
+  const userId = req.params.id;
+  // console.log({userId})
   const result = await UserService.getUserProfileFromDB(userId);
 
   sendResponse(res, {
@@ -57,20 +58,37 @@ const updateUserRole = catchAsync(async (req: Request, res: Response) => {
 });
 
 const updateUserProfile = catchAsync(async (req: Request, res: Response) => {
-  const userId = req.params.userId;
-  const file = req.file;
-  const result = await UserService.updateUserProfileIntoDB(
-    userId,
-    req.body,
-    file
-  );
+  try {
+    const userId = req.params.id;
+    const userData = req.body.userData
+    console.log(req.body.userData)
 
-  sendResponse(res, {
-    statusCode: 200,
-    success: true,
-    message: "User profile updated successfully",
-    data: result,
-  });
+    console.log('Parsed UserData:', userData);
+    const file = req.file;
+
+    // console.log('UserId:', userId);
+    console.log('File:', file);
+
+    const result = await UserService.updateUserProfileIntoDB(
+      userId,
+      userData,
+      file
+    );
+
+    sendResponse(res, {
+      statusCode: 200,
+      success: true,
+      message: "User profile updated successfully",
+      data: result,
+    });
+  } catch (error: any) {
+    sendResponse(res, {
+      statusCode: 500,
+      success: false,
+      message: error.message || "Failed to update user profile",
+      data: null,
+    });
+  }
 });
 
 const verifyUser = catchAsync(async (req: Request, res: Response) => {

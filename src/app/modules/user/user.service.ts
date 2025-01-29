@@ -34,7 +34,7 @@ const createUserIntoDB = async (payload: any, file?: Express.Multer.File) => {
     const result = await UserModel.create(payload);
     return result;
   } catch (error: any) {
-    throw new Error('Failed to create user: ' + error.message);
+    throw new Error("Failed to create user: " + error.message);
   }
 };
 
@@ -47,11 +47,10 @@ const getAllUsersFromDB = async () => {
 };
 
 const getUserProfileFromDB = async (userId: string) => {
-  const result = await UserModel.findById(userId)
-    .select("-password")
-    .populate("followers", "name profilePicture isVerified")
-    .populate("following", "name profilePicture isVerified")
-    .populate("posts");
+  const result = await UserModel.findOne({ _id: userId }).select("-password");
+  // .populate("followers", "name profilePicture isVerified")
+  // .populate("following", "name profilePicture isVerified")
+  // .populate("posts");
 
   if (!result) {
     throw new Error("User not found");
@@ -79,30 +78,40 @@ const updateUserRoleIntoDB = async (
 
 const updateUserProfileIntoDB = async (
   userId: string,
-  payload: any,
+  payload: Record<string, any>,
   file?: Express.Multer.File
 ) => {
-  // If there's a new profile picture
-  if (file) {
-    payload.profilePicture = await handleFileUpload(file);
+  try {
+    // If there's a new profile picture
+    if (file) {
+      const profilePictureUrl = await handleFileUpload(file);
+      payload.profilePicture = profilePictureUrl;
+    }
+
+    // Ensure payload is an object
+    const updateData = typeof payload === 'string' ? JSON.parse(payload) : payload;
+
+    // Remove any undefined or null values
+    Object.keys(updateData).forEach(key => {
+      if (updateData[key] === undefined || updateData[key] === null) {
+        delete updateData[key];
+      }
+    });
+
+    const result = await UserModel.findByIdAndUpdate(
+      userId,
+      { $set: updateData },
+      { new: true, runValidators: true }
+    ).select("-password");
+
+    if (!result) {
+      throw new Error("User not found");
+    }
+
+    return result;
+  } catch (error: any) {
+    throw new Error(error.message || "Failed to update user profile");
   }
-
-  // If there's a new password, hash it
-  if (payload.password) {
-    payload.password = await bcrypt.hash(payload.password, 10);
-  }
-
-  const result = await UserModel.findByIdAndUpdate(
-    userId,
-    { $set: payload },
-    { new: true }
-  ).select("-password");
-
-  if (!result) {
-    throw new Error("User not found");
-  }
-
-  return result;
 };
 
 const verifyUserIntoDB = async (

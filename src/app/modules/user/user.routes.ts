@@ -13,4 +13,11 @@ router.post("/login", UserControllers.loginUser);
 router.post("/forget-password", UserControllers.forgetPassword);
 router.patch("/reset-password/:token", UserControllers.resetPassword);
 
+router.get("/my-profile/:id", UserControllers.getUserProfile);
+router.patch(
+  "/update-my-profile/:id",
+  SingleFileUpload.singleFileUpload,  // Add this middleware
+  UserControllers.updateUserProfile
+);
+
 export const UserRoutes = router;
