@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Payment Confirmation</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background-color: #f0f8ff;
+      }
+      .confirmation-container {
+        text-align: center;
+        background-color: #ffffff;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      }
+      .confirmation-container h1 {
+        font-size: 2.5rem;
+        color: #28a745;
+        margin-bottom: 15px;
+      }
+      .confirmation-container p {
+        font-size: 1.2rem;
+        color: #555555;
+        margin-bottom: 20px;
+      }
+      .confirmation-container .icon {
+        font-size: 4rem;
+        color: #28a745;
+        margin-bottom: 15px;
+      }
+      .confirmation-container .back-button {
+        display: inline-block;
+        text-decoration: none;
+        background-color: #28a745;
+        color: #ffffff;
+        padding: 10px 20px;
+        font-size: 1rem;
+        border-radius: 8px;
+        transition: background-color 0.3s ease;
+      }
+      .confirmation-container .back-button:hover {
+        background-color: #218838;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="confirmation-container">
+      <div class="icon">✔</div>
+      <h1>Payment Successful</h1>
+      <p>
+        Thank you for your payment! Your transaction has been completed
+        successfully.
+      </p>
+      <a href="/" class="back-button">Back to Home</a>
+    </div>
+  </body>
+</html>
