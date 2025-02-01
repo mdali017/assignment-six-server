@@ -19,6 +19,8 @@ export type TPost = {
   isPremium: boolean;
   upvotes: Types.ObjectId[]; 
   upvoteCount: number;
+  downvotes: Types.ObjectId[]; 
+  downvoteCount: number;
   votes: Types.ObjectId[]; 
   createdAt?: Date;
   updatedAt?: Date;

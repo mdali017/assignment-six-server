@@ -40,8 +40,11 @@ const createPostIntoDB = async (
 
 const getAllPostsFromDB = async () => {
   const posts = await PostModel.find().populate({
-    path: "upvotes",
-    select: "name profilePicture",
+    path: "votes",
+    populate: {
+      path: "_id",
+      select: "name profilePicture",
+    }
   });
 
   return posts;

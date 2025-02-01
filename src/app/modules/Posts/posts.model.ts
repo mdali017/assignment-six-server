@@ -1,3 +1,4 @@
+// Update your posts.model.ts
 import { Schema, model } from "mongoose";
 import { TPost, TPostCategory } from "./posts.interface";
 
@@ -45,12 +46,21 @@ const postSchema = new Schema<TPost>(
     upvoteCount: {
       type: Number,
       default: 0,
+      min: 0
+    },
+    downvotes: [{
+      type: Schema.Types.ObjectId,
+      ref: "User",
+    }],
+    downvoteCount: {
+      type: Number,
+      default: 0,
+      min: 0
     },
     votes: [{
       type: Schema.Types.ObjectId,
       ref: "Vote",
     }],
-    
   },
   {
     timestamps: true,
@@ -60,12 +70,9 @@ const postSchema = new Schema<TPost>(
   }
 );
 
-// Middleware to update upvote count
-postSchema.pre("save", function (next) {
-  if (this.isModified("upvotes")) {
-    this.upvoteCount = this.upvotes.length;
-  }
-  next();
+// Add virtual for total vote count
+postSchema.virtual('totalVotes').get(function() {
+  return (this.upvoteCount || 0) - (this.downvoteCount || 0);
 });
 
 export const PostModel = model<TPost>("Post", postSchema);
