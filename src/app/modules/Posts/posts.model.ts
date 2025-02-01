@@ -6,8 +6,6 @@ const postCategories: TPostCategory[] = [
   "Business Travel",
   "Exploration",
   "Cultural",
-  "Budget Travel",
-  "Luxury Travel",
   "Food & Travel",
   "Solo Travel"
 ];
@@ -48,6 +46,11 @@ const postSchema = new Schema<TPost>(
       type: Number,
       default: 0,
     },
+    votes: [{
+      type: Schema.Types.ObjectId,
+      ref: "Vote",
+    }],
+    
   },
   {
     timestamps: true,

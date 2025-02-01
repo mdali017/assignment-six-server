@@ -5,12 +5,17 @@ import { Types } from "mongoose";
 import { SingleFileUpload } from "../../helpers/singleFileUpload";
 
 const handleImagesUpload = async (files: Express.Multer.File[]) => {
-  const uploadPromises = files.map(file => SingleFileUpload.uploadFileToCloudinary(file));
+  const uploadPromises = files.map((file) =>
+    SingleFileUpload.uploadFileToCloudinary(file)
+  );
   const results = await Promise.all(uploadPromises);
   return results.map((result: any) => result.secure_url);
 };
 
-const createPostIntoDB = async (payload: TPost, files?: Express.Multer.File[]) => {
+const createPostIntoDB = async (
+  payload: TPost,
+  files?: Express.Multer.File[]
+) => {
   // const user = await UserModel.findById(payload.author);
   // if (!user) {
   //   throw new Error("Author not found");
@@ -26,27 +31,18 @@ const createPostIntoDB = async (payload: TPost, files?: Express.Multer.File[]) =
   const newPost = await PostModel.create(payload);
 
   // Add post to user's posts array
-  await UserModel.findByIdAndUpdate(
-    payload.author,
-    { $push: { posts: newPost._id } }
-  );
+  await UserModel.findByIdAndUpdate(payload.author, {
+    $push: { posts: newPost._id },
+  });
 
   return newPost;
 };
 
 const getAllPostsFromDB = async () => {
-  // const user = await UserModel.findById(userId);
-  // if (!user) {
-  //   throw new Error("User not found");
-  // }
-
-  // If user is verified, return all posts
-  // If not, return only non-premium posts
-  // const query = user.isVerified ? {} : { isPremium: false };
-
-  const posts = await PostModel.find()
-    .populate("author", "name profilePicture isVerified")
-    .sort({ createdAt: -1 });
+  const posts = await PostModel.find().populate({
+    path: "upvotes",
+    select: "name profilePicture",
+  });
 
   return posts;
 };
@@ -67,7 +63,9 @@ const getPostByIdFromDB = async (postId: string, userId: string) => {
 
   // Check if user can access premium content
   if (post.isPremium && !user.isVerified) {
-    throw new Error("This is premium content. Please verify your account to access.");
+    throw new Error(
+      "This is premium content. Please verify your account to access."
+    );
   }
 
   return post;
@@ -116,10 +114,7 @@ const deletePostFromDB = async (postId: string, userId: string) => {
   }
 
   // Remove post from user's posts array
-  await UserModel.findByIdAndUpdate(
-    userId,
-    { $pull: { posts: postId } }
-  );
+  await UserModel.findByIdAndUpdate(userId, { $pull: { posts: postId } });
 
   await PostModel.findByIdAndDelete(postId);
   return post;
@@ -134,7 +129,7 @@ const toggleUpvotePostInDB = async (postId: string, userId: string) => {
   const hasUpvoted = post.upvotes.includes(new Types.ObjectId(userId));
 
   if (hasUpvoted) {
-    post.upvotes = post.upvotes.filter(id => id.toString() !== userId);
+    post.upvotes = post.upvotes.filter((id) => id.toString() !== userId);
   } else {
     post.upvotes.push(new Types.ObjectId(userId));
   }

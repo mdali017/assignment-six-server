@@ -17,8 +17,9 @@ export type TPost = {
   images: string[]; // Array of image URLs
   category: TPostCategory;
   isPremium: boolean;
-  upvotes: Types.ObjectId[]; // Array of user IDs who upvoted
+  upvotes: Types.ObjectId[]; 
   upvoteCount: number;
+  votes: Types.ObjectId[]; 
   createdAt?: Date;
   updatedAt?: Date;
 };

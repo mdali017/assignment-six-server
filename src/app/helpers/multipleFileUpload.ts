@@ -47,7 +47,7 @@ const uploadFilesToCloudinary = async (files: any) => {
     // Map results to a format that includes url and altText
     return results.map((result) => ({
       url: result.secure_url,
-      altText: result.public_id, // Using public_id for altText
+      altText: result.public_id, 
     }));
   } catch (error) {
     throw new Error("Error uploading files to Cloudinary");

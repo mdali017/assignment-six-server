@@ -4,11 +4,13 @@ import sendResponse from "../../utils/sendResponse";
 import { PostService } from "./posts.service";
 
 const createPost = catchAsync(async (req: Request, res: Response) => {
+  console.log(req.body);
   // Parse if string, otherwise use as is
-  const postData = typeof req.body.postData === 'string' 
-    ? JSON.parse(req.body.postData) 
-    : req.body.postData;
-    
+  const postData =
+    typeof req.body.postData === "string"
+      ? JSON.parse(req.body.postData)
+      : req.body.postData;
+
   const files = req.files as Express.Multer.File[];
 
   const result = await PostService.createPostIntoDB(postData, files);
@@ -22,7 +24,6 @@ const createPost = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getAllPosts = catchAsync(async (req: Request, res: Response) => {
-  // const userId = req.user.id; // Assuming you have auth middleware setting req.user
   const result = await PostService.getAllPostsFromDB();
 
   sendResponse(res, {
@@ -52,7 +53,12 @@ const updatePost = catchAsync(async (req: Request, res: Response) => {
   const updateData = JSON.parse(req.body.postData);
   const files = req.files as Express.Multer.File[];
 
-  const result = await PostService.updatePostIntoDB(postId, userId, updateData, files);
+  const result = await PostService.updatePostIntoDB(
+    postId,
+    userId,
+    updateData,
+    files
+  );
 
   sendResponse(res, {
     statusCode: 200,
