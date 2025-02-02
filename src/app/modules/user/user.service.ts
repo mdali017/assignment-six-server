@@ -188,17 +188,7 @@ const loginUserIntoDB = async (payload: {
 
   return {
     token,
-    user: {
-      id: user._id,
-      name: user.name,
-      email: user.email,
-      role: user.role,
-      isVerified: user.isVerified,
-      profilePicture: user.profilePicture,
-      followerCount: user.followerCount,
-      followingCount: user.followingCount,
-      postCount: user.postCount,
-    },
+    user,
   };
 };
 

@@ -17,6 +17,7 @@ export type TUser = {
   name: TUserName;
   email: string;
   password: string;
+  designation?: string;
   phone: string;
   role: "admin" | "user";
   address?: string;
